@@ -40,9 +40,22 @@ exports.updateSubjects = async (req, res, next) => {
 
 // @desc delect subject by id
 exports.delectSubjects = async (req, res, next) => {
+    try {
+        const deleteSubj = await Subject.findByIdAndDelete(req.params.id)
+        if (!deleteSubj) {
+            return res.status(400).json({ success: false});
+        }
+    
+    
+        res.status(200)
+        .json({ success: true, data: "Subject delected"});
 
-    res.status(200)
-    .json({ success: true, message: `Delect Subject ${ req.params.id}`});
+    } catch (err) {
+        res.status(400).json({error: err.message});
+    }
+        
+        
+  
 };
 
 // @desc Get all Tutor
