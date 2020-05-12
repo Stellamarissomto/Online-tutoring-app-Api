@@ -14,7 +14,7 @@ const subjectSchema = new mongoose.Schema({
         enum: ["Primary", "JSS", "SSS"]
     },
    
-    website: {
+    data: {
         type: String,
         validate: {
             validator: function (value) {
