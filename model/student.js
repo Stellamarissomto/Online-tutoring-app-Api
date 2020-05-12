@@ -9,7 +9,7 @@ name: {
       },
     required: [true, 'please add a name'],
     trim: true,
-    maxlength: [50, 'Name can not be more than 60 characters']
+    maxlength: [50, 'Name can not be more than 50 characters']
 },
 
 email: {
@@ -36,9 +36,15 @@ password: {
 
 },
 
+admin:{
+    required: true,
+    default: false,
+    type: Boolean
+},
+
 lessons: [{ type: mongoose.Schema.Types.ObjectId, 
     defaault: null }],
 
 });
 
-module.exports = mongoose.model('student', studentSchema);
+module.exports = mongoose.model('Student', studentSchema);
