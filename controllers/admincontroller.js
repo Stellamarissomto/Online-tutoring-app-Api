@@ -1,17 +1,38 @@
 
 const  Subject  = require("../model/subjects");
 const Tutor = require("../model/tutor");
+const Lesson = require("../model/lessons");
 
 
 // @desc create a subject in a category
 exports.createSubjects = async (req, res, next) => {
     try {
-    const subj = await Subject.create(req.body);
+    const { name, category, data } = req.body;
 
-    res.status(201).json({
-        success: true,
-        data: subj
-    });
+    // check if subject already exists
+
+    const subjFind = await Subject.find({ category, name}).count(
+        (err, count) => {
+            if (err) {
+                res.status(400).json({ error: err.message});
+            }
+            return count;
+        }
+    );
+
+    if (subjFind == 0 ) {
+
+        const subject = await new Subject({ name,
+            data,
+            category,}).save();
+
+        res.status(200).json({ data: subject});
+
+        
+    } else {
+
+        res.status(400).json({ message: "Subject has already been created in the database"});
+    }
 
 } catch (err) {
     res.status(400).json({ error: err.message});
@@ -85,4 +106,134 @@ exports.getTutor = async (req, res, next) => {
         res.status(400)
         .json({ success: false, error: err.message});
       }
+};
+
+
+// @desc book lessons
+
+exports.bookLesson = async (req, res, next) => {
+    try {
+    const { name, category, subject, date, data } = req.body;
+
+    // check for empty field
+    const emptyField = checkEmptyFields(req.body);
+    if (emptyField) {
+        res.status(400).json({ message: ` ${emptyField} can't be empty`});
+    }
+
+    // verify if the tutor is in the db
+
+    const isValidTutor = await Tutor.find({ name: tutor}).count(
+        (err, count) => {
+            if (err) {
+                res.status(400).json({ error: err.message});
+            }
+            return count;
+        }
+    );
+
+    // verify if the subject is in the db
+
+    const isValidSubj = await Subject.find({ category, name: subject}).count(
+        (err, count) => {
+            if (err) {
+                res.status(400).json({ error: err.message});
+            }
+            return count;
+        }
+    );
+
+    if (isValidSubj > 0 && isValidTutor > 0) {
+
+        const lesson = await new Lesson({ name,
+            date,
+            tutor,
+            data,
+            subject,
+            category}).save();
+
+        res.status(200).json({ data: lesson});
+
+        
+    } else {
+
+        res.status(400).json({ error: "Ensure you Entered a valid Tutor name and Subject in the correct category"});
+    }
+
+
+
+} catch (err) {
+    res.status(400).json({ error: err.message});
+}
+};
+
+
+// @desc retrieve all lessons
+
+exports.getLessons = async (req, res, next) =>{
+    try {
+        const lesson = await Lesson.find();
+        res.status(200).json({ data: lesson})
+    } catch (err) {
+        res.status(400).json({ error: err.message});
+        
+    }
+
+
+}
+
+// @desc Get a Lessons by id
+
+exports.getLesson = async (req, res, next) => {
+    try {
+        const lesson = await Lesson.findById(req.params.id);
+        res.status(200).json({ data: lesson});
+    
+      
+      } catch (err) {
+    
+        res.status(400)
+        .json({ success: false, error: err.message});
+      }
+
+
+}
+
+  // @desc update lesson by id
+exports.updateLessonss = async (req, res, next) => {
+    try {
+    const updateles = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
+        new: true,
+        runValidators: true
+    });
+    if (!updateles) {
+        return res.status(400).json({ success: false});
+    }
+
+
+    res.status(200)
+    .json({ success: true, data: updateles});
+} catch (err) {
+    res.status(400).json({error: err.message});
+}
+};    
+
+// @desc delect lesson by id
+exports.delectLesson = async (req, res, next) => {
+    try {
+        const deleteLes = await Lesson.findByIdAndDelete(req.params.id)
+        if (!deleteLes) {
+            return res.status(400).json({ success: false});
+        }
+    
+    
+        res.status(200)
+        .json({ success: true, data: "Lesson delected"});
+
+    } catch (err) {
+        res.status(400).json({error: err.message});
+    }
+        
+        
+  
 };

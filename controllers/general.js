@@ -17,6 +17,8 @@ exports.getCategory = async (req, res, next) => {
 
 };
 
+
+
 // @desc Get a subject from a category by id
 
 exports.getSubject = async (req, res, next) => {
@@ -32,6 +34,8 @@ exports.getSubject = async (req, res, next) => {
   }
     
 };
+
+
 
 // @desc Get all subject in a category
 

@@ -20,17 +20,13 @@ const lessonSchema = new mongoose.Schema({
 
     },
 
-    dateStart: {
+    date: {
         type: Date,
         required: true
 
     },
 
-    dateEnd: {
-        type: Date,
-        required: true
-
-    },
+    
    
     data: {
         type: String,
@@ -51,4 +47,4 @@ const lessonSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.Model("Lesson", lessonSchema);
+module.exports = mongoose.model("Lesson", lessonSchema);
