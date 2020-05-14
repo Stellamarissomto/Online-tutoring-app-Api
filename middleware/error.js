@@ -10,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
     // Mongoose bad ObjectId
     if (err.name === 'CastError') {
         const message = `Please enter a valid ID. ID:  ${err.value} not found.`;
-        error = new errorResponse(message), 404;
+        error = new errorResponse(message, 404);
         
     }
 
@@ -23,9 +23,9 @@ const errorHandler = (err, req, res, next) => {
         
     }
 
-    res.status(err.statusCode || 500).json({
+    res.status(error.statusCode || 500).json({
         success: false,
-        error: err.message || 'server Error'
+        error: error.message || 'server Error'
     });
 
 

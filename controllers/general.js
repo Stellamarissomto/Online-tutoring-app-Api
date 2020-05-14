@@ -33,7 +33,6 @@ exports.getSubject = async (req, res, next) => {
   } catch (err) {
 
     next(err);
-    //next(new errorResponse(`Subject not foud with id of ${req.params.id}`, 404));
   }
     
 };

@@ -1,7 +1,9 @@
 
+const errorResponse = require('../utilities/errorResponse');
 const  Subject  = require("../model/subjects");
 const Tutor = require("../model/tutor");
 const Lesson = require("../model/lessons");
+
 
 
 // @desc create a subject in a category
@@ -49,6 +51,7 @@ exports.updateSubjects = async (req, res, next) => {
         runValidators: true
     });
     if (!updatesubj) {
+       
         return res.status(400).json({ success: false});
     }
 
@@ -56,7 +59,7 @@ exports.updateSubjects = async (req, res, next) => {
     res.status(200)
     .json({ success: true, data: updatesubj});
 } catch (err) {
-    res.status(400).json({error: err.message});
+    next(err);
 }
 };    
 
@@ -73,7 +76,7 @@ exports.delectSubjects = async (req, res, next) => {
         .json({ success: true, data: "Subject delected"});
 
     } catch (err) {
-        res.status(400).json({error: err.message});
+        next(err);
     }
         
         
@@ -103,9 +106,7 @@ exports.getTutor = async (req, res, next) => {
     
       
       } catch (err) {
-    
-        res.status(400)
-        .json({ success: false, error: err.message});
+         next(err);
       }
 };
 
