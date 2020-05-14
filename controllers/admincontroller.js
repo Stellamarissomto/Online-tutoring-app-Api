@@ -5,6 +5,7 @@ const Lesson = require("../model/lessons");
 
 
 // @desc create a subject in a category
+
 exports.createSubjects = async (req, res, next) => {
     try {
     const { name, category, data } = req.body;

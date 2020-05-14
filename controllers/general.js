@@ -1,3 +1,5 @@
+const errorResponse = require('../utilities/errorResponse');
+
 const Tutor = require('../model/tutor');
 const Subject = require('../model/subjects');
 
@@ -24,13 +26,14 @@ exports.getCategory = async (req, res, next) => {
 exports.getSubject = async (req, res, next) => {
   try {
     const subject = await Subject.findById(req.params.id);
-    res.status(200).json({ data: subject});
+    
+   res.status(200).json({ data: subject});
 
   
   } catch (err) {
 
-    res.status(400)
-    .json({ success: false, error: err.message});
+    next(err);
+    //next(new errorResponse(`Subject not foud with id of ${req.params.id}`, 404));
   }
     
 };

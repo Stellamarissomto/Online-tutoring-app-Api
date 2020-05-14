@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // conncet to database
@@ -9,6 +10,7 @@ connectDB();
 // route files
 const generalroute = require('./Routes/general');
 const adminroute = require('./Routes/adminroute');
+
 
 //load env files
 dotenv.config({ path: './config/config.env'});
@@ -29,6 +31,10 @@ if (process.env.NODE_ENV === 'deveploment') {
  // mount routers
  app.use('/api/v1/general', generalroute);
  app.use('/api/v1/admin', adminroute);
+
+
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000
 
