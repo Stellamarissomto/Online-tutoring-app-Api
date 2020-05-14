@@ -38,7 +38,7 @@ exports.createSubjects = async (req, res, next) => {
     }
 
 } catch (err) {
-    res.status(400).json({ error: err.message});
+    res.status(400).json({ succes: false, error: err.message});
 }
 };
 
@@ -116,13 +116,7 @@ exports.getTutor = async (req, res, next) => {
 exports.bookLesson = async (req, res, next) => {
     try {
     const { name, category, subject, date, data } = req.body;
-
-    // check for empty field
-    const emptyField = checkEmptyFields(req.body);
-    if (emptyField) {
-        res.status(400).json({ message: ` ${emptyField} can't be empty`});
-    }
-
+    
     // verify if the tutor is in the db
 
     const isValidTutor = await Tutor.find({ name: tutor}).count(
