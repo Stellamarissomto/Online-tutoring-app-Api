@@ -115,8 +115,8 @@ exports.getTutor = async (req, res, next) => {
 
 exports.bookLesson = async (req, res, next) => {
     try {
-    const { name, category, subject, date, data } = req.body;
-    
+    const { name, category, subject, tutor, date, data } = req.body;
+
     // verify if the tutor is in the db
 
     const isValidTutor = await Tutor.find({ name: tutor}).count(

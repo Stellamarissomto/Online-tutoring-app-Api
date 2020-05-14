@@ -9,7 +9,7 @@ const Student = require("../model/student");
 
 exports.bookLesson = async (req, res, next) => {
     try {
-    const { name, category, subject, date, data } = req.body;
+    const { name, category, subject, tutor, date, data } = req.body;
     
     // verify if the tutor is in the db
 

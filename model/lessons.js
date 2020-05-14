@@ -20,6 +20,11 @@ const lessonSchema = new mongoose.Schema({
 
     },
 
+    tutor: {
+        type: String,
+        required: true
+    },
+
     date: {
         type: Date,
         required: true

@@ -10,7 +10,7 @@ router.get('/retriveTutors', getTutor);
 router.get('/retriveLessons', getLessons);
 
 router.post('/createSubject', createSubjects);
-router.post('/booklesson', bookLesson);
+router.post('/bookLesson', bookLesson);
 
 router.put('/updateSubject/:id', updateSubjects);
 
