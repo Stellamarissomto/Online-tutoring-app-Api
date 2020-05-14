@@ -4,6 +4,9 @@ const Tutor = require("../model/tutor");
 const Lesson = require("../model/lessons");
 const Student = require("../model/student");
 
+
+// @desc book lessons
+
 exports.bookLesson = async (req, res, next) => {
     try {
     const { name, category, subject, date, data } = req.body;
