@@ -65,12 +65,10 @@ try{
 exports.searchSubject = async (req, res) => {
     try {
       const { subjectName } = req.body;
-      const subject = await Subject.find({
-        $text: { $search: subjectName },
-      }).exec();
+      const subject = await Subject.find({$text: { $search: subjectName }}).exec();
       res.status(200).json({ message: subject });
     } catch (err) {
-      res.status(400).json({ error: err.message });
+      res.status(400).json({ success: false, error: err.message });
     }
   };
 
