@@ -16,13 +16,20 @@ email: {
       type: String,
       required: [true, 'please add an email'],
       trim: true,
-      validate: {
+      /*validate: {
           validator: function(value) {
             return /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/.test(value);
         },
      message: "please enter a valid email"
 
-      },
+      }, */
+      match: [
+        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+
+        'please add a valid email'
+
+      ]
+
 },
 
 phone: {
@@ -50,5 +57,12 @@ subject: [{
     
 
 });
+
+// encrypt password using bcrypt
+
+tutorSchema.pre('save', async function(next) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  });
 
 module.exports = mongoose.model('Tutor', tutorSchema);

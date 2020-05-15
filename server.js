@@ -11,6 +11,7 @@ connectDB();
 const generalroute = require('./Routes/general');
 const adminroute = require('./Routes/adminroute');
 const studentroute = require('./Routes/student');
+const tutorroute = require('./Routes/tutor');
 
 
 //load env files
@@ -33,6 +34,7 @@ if (process.env.NODE_ENV === 'deveploment') {
  app.use('/api/v1/general', generalroute);
  app.use('/api/v1/admin', adminroute);
  app.use('/api/v1/student', studentroute);
+ app.use('/api/v1/tutor', tutorroute);
 
 
 

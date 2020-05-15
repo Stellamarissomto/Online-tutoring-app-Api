@@ -1,8 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const { registerStudent, loginStudent } = require('../controllers/auth');
 
 const { bookLesson} = require("../controllers/studentcontroller");
 
+
+router.post("/register", registerStudent);
+router.post("/login", loginStudent);
 router.post("/bookLesson", bookLesson);
 
 
