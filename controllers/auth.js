@@ -37,7 +37,7 @@ exports.registerStudent = async(req, res) => {
         
     } else {
 
-        res.status(400).json({ message: "User has already exits "});
+        res.status(400).json({ message: "User already exits "});
 
     }
         
@@ -53,19 +53,33 @@ exports.registerStudent = async(req, res) => {
 exports.registerTutor = async(req, res) => {
     try {
         const { name, email, phone, password} = req.body;
+    
+    // check if tutor already exists
 
-      // create user
-      const tutor = await Tutor.create({
-          name,
-          email,
-          phone,
-          password
-      });
+    const findTutor = await Tutor.find({name, email}).count(
+        (err, count) => {
+            if (err) {
+                res.status(500).json({ error: err.message});
+            }
+            return count;
+        }
+    );
 
-      // Create token
-      const token = tutor.getSignedJwtToken();
+    if (findTutor > 0 ) {
 
-      res.status(200).json({ success: true, message: "Student registered successfully", token});
+        return res.status(400).json({ message: "User already exits "});
+    } 
+
+        const tutor = await new Tutor({ name,
+            email,
+            phone,
+            password}).save();
+
+    // create token
+
+    const token = tutor.getSignedJwtToken();
+
+    res.status(200).json({ success: true, message: "Tutor registered successfully", token});
         
     } catch (err) {
         res.status(400).json({ success: false, error: err.message});
@@ -112,3 +126,46 @@ exports.loginStudent = async(req, res) => {
         res.status(400).json({ success: false, error: err.message});
     }
 }
+
+
+// @desc   Login tutor
+// @route  POST /api/v1/tutor/login
+// @access public
+
+exports.loginTutor = async(req, res) => {
+    try {
+        const { email, password} = req.body;
+      // validate email and password
+      if (!email || !password) {
+
+        return res.status(400).json({ success: false, message: "please provide an email and password"});
+          
+      }
+
+      // check for user
+
+      const tutor = await Tutor.findOne({ email }).select('+password');
+      if (!tutor) {
+        return res.status(401).json({ success: false, message: "Invalid email or password"});
+      }
+
+      // check if password matches
+
+      const isMatch = await tutor.matchPassword(password);
+      if (!isMatch) {
+        return res.status(401).json({ success: false, message: "Invalid email or password"});
+      
+      }
+
+
+      // create token
+
+      const token = tutor.getSignedJwtToken();
+
+      res.status(200).json({ success: true, message: "Tutor loged in successfully", token});
+        
+    } catch (err) {
+        res.status(400).json({ success: false, error: err.message});
+    }
+}
+
