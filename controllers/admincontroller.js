@@ -99,7 +99,7 @@ try {
 
 // @desc Get a Tutor by id
 
-exports.getTutor = async (req, res, next) => {
+exports.getTutorById = async (req, res, next) => {
     try {
         const tutor = await Tutor.findById(req.params.id);
         res.status(200).json({ data: tutor});
@@ -115,18 +115,19 @@ exports.getTutor = async (req, res, next) => {
 
 exports.bookLesson = async (req, res, next) => {
     try {
-    const { name, category, subject, tutor, date, data } = req.body;
+    const { name, category, subject, tutor, data } = req.body;
 
-    // verify if the tutor is in the db
+     // check if tutor already exists
 
-    const isValidTutor = await Tutor.find({ name: tutor}).count(
+     const findTutor = await Tutor.find({ name: tutor}).count(
         (err, count) => {
             if (err) {
-                res.status(400).json({ error: err.message});
+                res.status(500).json({ error: err.message});
             }
             return count;
         }
     );
+
 
     // verify if the subject is in the db
 
@@ -139,10 +140,9 @@ exports.bookLesson = async (req, res, next) => {
         }
     );
 
-    if (isValidSubj > 0 && isValidTutor > 0) {
+    if (isValidSubj > 0 && findTutor > 0) {
 
         const lesson = await new Lesson({ name,
-            date,
             tutor,
             data,
             subject,
@@ -180,7 +180,7 @@ exports.getLessons = async (req, res, next) =>{
 
 // @desc Get a Lessons by id
 
-exports.getLesson = async (req, res, next) => {
+exports.getLessonById = async (req, res, next) => {
     try {
         const lesson = await Lesson.findById(req.params.id);
         res.status(200).json({ data: lesson});
@@ -196,7 +196,7 @@ exports.getLesson = async (req, res, next) => {
 }
 
   // @desc update lesson by id
-exports.updateLessonss = async (req, res, next) => {
+exports.updateLesson = async (req, res, next) => {
     try {
     const updateles = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
         new: true,

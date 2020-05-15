@@ -9,14 +9,14 @@ const Student = require("../model/student");
 
 exports.bookLesson = async (req, res, next) => {
     try {
-    const { name, category, subject, tutor, date, data } = req.body;
+    const { name, category, subject, tutor} = req.body;
     
     // verify if the tutor is in the db
 
-    const isValidTutor = await Tutor.find({ name: tutor}).count(
+    const isValidTutor = await Tutor.find({ name }).count(
         (err, count) => {
             if (err) {
-                res.status(400).json({ error: err.message});
+                res.status(500).json({ error: err.message});
             }
             return count;
         }
@@ -24,10 +24,10 @@ exports.bookLesson = async (req, res, next) => {
 
     // verify if the subject is in the db
 
-    const isValidSubj = await Subject.find({ category, name: subject}).count(
+    const isValidSubj = await Subject.find({ category, name }).count(
         (err, count) => {
             if (err) {
-                res.status(400).json({ error: err.message});
+                res.status(500).json({ error: err.message});
             }
             return count;
         }

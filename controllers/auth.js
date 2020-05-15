@@ -116,11 +116,9 @@ exports.loginStudent = async(req, res) => {
       }
 
 
-      // create token
+      // create token and cookie for student
 
-      const token = student.getSignedJwtToken();
-
-      res.status(200).json({ success: true, message: "Student loged in successfully", token});
+      sendTokenResponseStudent(student, 200, res);
         
     } catch (err) {
         res.status(400).json({ success: false, error: err.message});
@@ -158,14 +156,71 @@ exports.loginTutor = async(req, res) => {
       }
 
 
-      // create token
+      // create token and cookies
 
-      const token = tutor.getSignedJwtToken();
-
-      res.status(200).json({ success: true, message: "Tutor loged in successfully", token});
+      sendTokenResponse(tutor, 200, res);
         
     } catch (err) {
         res.status(400).json({ success: false, error: err.message});
     }
 }
 
+
+
+// Get token from tutor, create cookie and send response
+
+const sendTokenResponse = (tutor, statusCode, res) => {
+
+    // create token
+
+    const token = tutor.getSignedJwtToken();
+   
+
+   const options = {
+       expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+       httpOnly: true
+   };
+
+   if (process.env.NODE_ENV === 'production') {
+       options.secure = true
+       
+   }
+
+   res
+   .status(statusCode)
+   .cookie('token', token, options)
+   .json({
+       success: true,
+       message: "Tutor loged in successfully",
+       token
+   });
+
+
+}
+
+
+// Get token from Student, create cookie and send response
+
+const sendTokenResponseStudent = (student, statusCode, res) => {
+
+    // create token
+
+    const token = student.getSignedJwtToken();
+   
+
+   const options = {
+       expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+       httpOnly: true
+   };
+
+   res
+   .status(statusCode)
+   .cookie('token', token, options)
+   .json({
+       success: true,
+       message: "Student loged in successfully",
+       token
+   });
+
+
+}

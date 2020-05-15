@@ -1,20 +1,31 @@
 const express = require("express");
 const router = express.Router();
+const { protect } = require('../middleware/auth');
 
-const { getTutor, createSubjects, 
-       updateSubjects, delectSubjects, getLessons, bookLesson} = require('../controllers/admincontroller');
+const { getTutor, getTutorById, createSubjects, 
+       updateSubjects, delectSubjects, 
+       getLessons,getLessonById, bookLesson, 
+       updateLesson, delectLesson} = require('../controllers/admincontroller');
 
-router.get('/retriveTutor/:id', getTutor);
+router.get('/retriveTutor/:id', getTutorById);
 
 router.get('/retriveTutors', getTutor);
+
 router.get('/retriveLessons', getLessons);
 
+router.get('/retriveLessons/:id', getLessonById);
+
 router.post('/createSubject', createSubjects);
+
 router.post('/bookLesson', bookLesson);
 
-router.put('/updateSubject/:id', updateSubjects);
+router.put('/updateSubject/:id',updateSubjects);
 
-router.delete('/delectSubject/:id', delectSubjects);
+router.put('/updateLesson/:id', updateLesson);
+
+router.delete('/delectSubject/:id',  delectSubjects);
+
+router.delete('/deleteLesson/:id', delectLesson)
 
 
 
