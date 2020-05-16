@@ -7,14 +7,11 @@ const Subject = require('../model/subjects');
 // @desc Get all category
 
 exports.getCategory = async (req, res, next) => {
-  try{
-
-    const category = await Subject.find({category} );
-    res.status(200).json({ data: category});
-
-  }
-  catch (err) {
-     res.status(400).json({ error: err.message});
+  try {
+    const category = await Subject.find();
+    res.status(200).json({ message: category });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 
 };

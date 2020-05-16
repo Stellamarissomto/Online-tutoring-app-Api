@@ -2,10 +2,19 @@ const express = require("express");
 const router = express.Router();
 const { protect } = require('../middleware/auth');
 
-const { getTutor, getTutorById, createSubjects, 
-       updateSubjects, delectSubjects, 
-       getLessons,getLessonById, bookLesson, 
-       updateLesson, delectLesson} = require('../controllers/admincontroller');
+const { getTutor,
+        getTutorById,
+       createSubjects, 
+       updateSubjects, 
+       delectSubjects, 
+       getLessons,
+       getLessonById, 
+       bookLesson, 
+       updateLesson, 
+       delectLesson, 
+       deleteCategory, 
+       deactivateTutor } = require('../controllers/admincontroller');
+
 
 router.get('/retriveTutor/:id', getTutorById);
 
@@ -25,7 +34,11 @@ router.put('/updateLesson/:id', updateLesson);
 
 router.delete('/delectSubject/:id',  delectSubjects);
 
-router.delete('/deleteLesson/:id', delectLesson)
+router.delete('/deleteLesson/:id', delectLesson);
+
+router.delete('/deleteCategory', deleteCategory);
+
+router.delete('deactivateTutor/:id', deactivateTutor );
 
 
 
