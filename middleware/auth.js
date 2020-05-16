@@ -28,7 +28,7 @@ exports.protect = async (req, res, next) => {
         console.log(decoded);
 
         req.student = await Student.findById(decoded.id);
-        //req.tutor = await Tutor.findById(decoded.id);
+        req.tutor = await Tutor.findById(decoded.id);
         
 
         next();
