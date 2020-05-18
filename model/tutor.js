@@ -39,6 +39,11 @@ password: {
     required: true,
 
 },
+role:  {
+    type: String,
+    enum: ['tutor', 'student'],
+    default: 'tutor'
+},
 
 admin: {
      type: Boolean,

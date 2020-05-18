@@ -13,32 +13,36 @@ const { getTutor,
        updateLesson, 
        delectLesson, 
        deleteCategory, 
-       deactivateTutor } = require('../controllers/admincontroller');
+       deactivateTutor,
+       makeAdmin } = require('../controllers/admincontroller');
 
 
-router.get('/retriveTutor/:id', getTutorById);
+router.get('/retriveTutor/:id',  protect, getTutorById);
 
-router.get('/retriveTutors', getTutor);
+router.get('/retriveTutors',  protect, getTutor);
 
-router.get('/retriveLessons', getLessons);
+router.get('/retriveLessons',  protect, getLessons);
 
-router.get('/retriveLessons/:id', getLessonById);
+router.get('/retriveLessons/:id',  protect, getLessonById);
 
-router.post('/createSubject', createSubjects);
+router.post('/createSubject',  protect, createSubjects);
 
-router.post('/bookLesson', bookLesson);
+router.post('/bookLesson',  protect, bookLesson);
 
-router.put('/updateSubject/:id',updateSubjects);
+router.post('/makeAdmin',  protect, makeAdmin);
 
-router.put('/updateLesson/:id', updateLesson);
 
-router.delete('/delectSubject/:id',  delectSubjects);
+router.put('/updateSubject/:id',  protect, updateSubjects);
 
-router.delete('/deleteLesson/:id', delectLesson);
+router.put('/updateLesson/:id',  protect, updateLesson);
 
-router.delete('/deleteCategory', deleteCategory);
+router.delete('/delectSubject/:id',  protect,  delectSubjects);
 
-router.delete('deactivateTutor/:id', deactivateTutor );
+router.delete('/deleteLesson/:id',  protect, delectLesson);
+
+router.delete('/deleteCategory',  protect, deleteCategory);
+
+router.delete('deactivateTutor/:id',  protect, deactivateTutor );
 
 
 

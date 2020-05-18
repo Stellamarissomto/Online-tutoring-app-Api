@@ -8,7 +8,7 @@ const Student = require("../model/student");
 
 exports.registerStudent = async(req, res) => {
     try {
-        const { name, email, phone, password} = req.body;
+        const { name, email, phone, role, password} = req.body;
     
     // check if student already exists
 
@@ -26,6 +26,7 @@ exports.registerStudent = async(req, res) => {
         const student = await new Student({ name,
             email,
             phone,
+            role,
             password}).save();
 
     // create token
@@ -52,7 +53,7 @@ exports.registerStudent = async(req, res) => {
 
 exports.registerTutor = async(req, res) => {
     try {
-        const { name, email, phone, password} = req.body;
+        const { name, email, phone, role, password} = req.body;
     
     // check if tutor already exists
 
@@ -73,11 +74,12 @@ exports.registerTutor = async(req, res) => {
         const tutor = await new Tutor({ name,
             email,
             phone,
+            role,
             password}).save();
 
     // create token
 
-    const token = tutor.getSignedJwtToken();
+    const token = student.getSignedJwtToken();
 
     res.status(200).json({ success: true, message: "Tutor registered successfully", token});
         
@@ -119,6 +121,7 @@ exports.loginStudent = async(req, res) => {
       // create token and cookie for student
 
       sendTokenResponseStudent(student, 200, res);
+
         
     } catch (err) {
         res.status(400).json({ success: false, error: err.message});
@@ -156,9 +159,11 @@ exports.loginTutor = async(req, res) => {
       }
 
 
+
       // create token and cookies
 
       sendTokenResponse(tutor, 200, res);
+
         
     } catch (err) {
         res.status(400).json({ success: false, error: err.message});
@@ -167,11 +172,10 @@ exports.loginTutor = async(req, res) => {
 
 
 
+
 // Get token from tutor, create cookie and send response
 
 const sendTokenResponse = (tutor, statusCode, res) => {
-
-    // create token
 
     const token = tutor.getSignedJwtToken();
    
@@ -193,7 +197,7 @@ const sendTokenResponse = (tutor, statusCode, res) => {
        success: true,
        message: "Tutor loged in successfully",
        token
-   });
+   }); 
 
 
 }
@@ -220,7 +224,9 @@ const sendTokenResponseStudent = (student, statusCode, res) => {
        success: true,
        message: "Student loged in successfully",
        token
-   });
+   }); 
 
 
 }
+
+

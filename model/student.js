@@ -37,6 +37,12 @@ password: {
 
 },
 
+role:  {
+    type: String,
+    enum: ['tutorr', 'student'],
+    default: 'student'
+},
+
 admin:{
     required: true,
     default: false,
