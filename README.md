@@ -63,7 +63,7 @@
 
 # Students:
 
-1) Students can sign up.
+1) Students can sign up
 
 2) Students can see all tutors taking a subject in a category
 
