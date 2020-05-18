@@ -1,20 +1,48 @@
 const express = require("express");
 const router = express.Router();
+const { protect } = require('../middleware/auth');
 
-const { getTutor, createSubjects, 
-       updateSubjects, delectSubjects, getLessons, bookLesson} = require('../controllers/admincontroller');
+const { getTutor,
+        getTutorById,
+       createSubjects, 
+       updateSubjects, 
+       delectSubjects, 
+       getLessons,
+       getLessonById, 
+       bookLesson, 
+       updateLesson, 
+       delectLesson, 
+       deleteCategory, 
+       deactivateTutor,
+       makeAdmin } = require('../controllers/admincontroller');
 
-router.get('/retriveTutor/:id', getTutor);
 
-router.get('/retriveTutors', getTutor);
-router.get('/retriveLessons', getLessons);
+router.get('/retriveTutor/:id',  protect, getTutorById);
 
-router.post('/createSubject', createSubjects);
-router.post('/booklesson', bookLesson);
+router.get('/retriveTutors',  protect, getTutor);
 
-router.put('/updateSubject/:id', updateSubjects);
+router.get('/retriveLessons',  protect, getLessons);
 
-router.delete('/delectSubject/:id', delectSubjects);
+router.get('/retriveLessons/:id',  protect, getLessonById);
+
+router.post('/createSubject',  protect, createSubjects);
+
+router.post('/bookLesson',  protect, bookLesson);
+
+router.post('/makeAdmin',  protect, makeAdmin);
+
+
+router.put('/updateSubject/:id',  protect, updateSubjects);
+
+router.put('/updateLesson/:id',  protect, updateLesson);
+
+router.delete('/delectSubject/:id',  protect,  delectSubjects);
+
+router.delete('/deleteLesson/:id',  protect, delectLesson);
+
+router.delete('/deleteCategory',  protect, deleteCategory);
+
+router.delete('deactivateTutor/:id',  protect, deactivateTutor );
 
 
 

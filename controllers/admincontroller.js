@@ -99,7 +99,7 @@ try {
 
 // @desc Get a Tutor by id
 
-exports.getTutor = async (req, res, next) => {
+exports.getTutorById = async (req, res, next) => {
     try {
         const tutor = await Tutor.findById(req.params.id);
         res.status(200).json({ data: tutor});
@@ -115,18 +115,19 @@ exports.getTutor = async (req, res, next) => {
 
 exports.bookLesson = async (req, res, next) => {
     try {
-    const { name, category, subject, date, data } = req.body;
-    
-    // verify if the tutor is in the db
+    const { name, category, subject, tutor, data } = req.body;
 
-    const isValidTutor = await Tutor.find({ name: tutor}).count(
+     // check if tutor already exists
+
+     const findTutor = await Tutor.find({ name: tutor}).count(
         (err, count) => {
             if (err) {
-                res.status(400).json({ error: err.message});
+                res.status(500).json({ error: err.message});
             }
             return count;
         }
     );
+
 
     // verify if the subject is in the db
 
@@ -139,10 +140,9 @@ exports.bookLesson = async (req, res, next) => {
         }
     );
 
-    if (isValidSubj > 0 && isValidTutor > 0) {
+    if (isValidSubj > 0 && findTutor > 0) {
 
         const lesson = await new Lesson({ name,
-            date,
             tutor,
             data,
             subject,
@@ -180,7 +180,7 @@ exports.getLessons = async (req, res, next) =>{
 
 // @desc Get a Lessons by id
 
-exports.getLesson = async (req, res, next) => {
+exports.getLessonById = async (req, res, next) => {
     try {
         const lesson = await Lesson.findById(req.params.id);
         res.status(200).json({ data: lesson});
@@ -188,15 +188,14 @@ exports.getLesson = async (req, res, next) => {
       
       } catch (err) {
     
-        res.status(400)
-        .json({ success: false, error: err.message});
+        next(err);
       }
 
 
 }
 
   // @desc update lesson by id
-exports.updateLessonss = async (req, res, next) => {
+exports.updateLesson = async (req, res, next) => {
     try {
     const updateles = await Lesson.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -210,7 +209,7 @@ exports.updateLessonss = async (req, res, next) => {
     res.status(200)
     .json({ success: true, data: updateles});
 } catch (err) {
-    res.status(400).json({error: err.message});
+    next(err);
 }
 };    
 
@@ -227,9 +226,92 @@ exports.delectLesson = async (req, res, next) => {
         .json({ success: true, data: "Lesson delected"});
 
     } catch (err) {
-        res.status(400).json({error: err.message});
+       next(err);
     }
+}
         
-        
-  
-};
+  // @desc delete a category
+
+  exports.deleteCategory = async (req, res) => {
+     try {
+          const { category } = req.body;
+
+          const validCategory = ["Primary", "JSS", "SSS"];
+
+    if (validCategory.includes(category)) {
+      const subjToDelete = await Subject.find({ category }).select({
+        _id: 1,
+      });
+      
+      subjToDelete.forEach(async (subjectId) => {
+        await Subject.findByIdAndDelete(subjectId);
+      });
+      res
+        .status(200)
+        .json({ message: `Deleted all subject in ${category} category` });
+    } else {
+      res.status(400).json({ error: "Enter a valid category please" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}; 
+
+
+
+
+// @desc Deactivate tutor by id
+
+exports.deactivateTutor = async (req, res, next) => {
+    try {
+    const deleteTutor = await Tutor.findByIdAndDelete(req.params.id);
+
+        if (!deleteTutor) {
+            return res.status(400).json({ success: false});
+        }
+    
+    
+        res.status(200)
+        .json({ success: true, data: "Tutor Deactivated successfully"});
+
+    } catch (err) {
+       next(err);
+    };
+}
+
+
+
+// @DESC make a tutor an admin
+
+exports.makeAdmin = async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      //verify that it's a valid tutor
+      const isValidTutorCount = await Tutor.find({ email }).count(
+        (err, count) => {
+          if (err) {
+            return res.status(400).json({ error: err });
+          }
+          return count;
+        }
+      );
+      if (isValidTutorCount > 0) {
+        await Tutor.updateOne(
+          { email },
+          {
+            $set: {
+              admin: true,
+            },
+          }
+        );
+        res
+          .status(200)
+          .json({ message: `Tutor with email ${email} has been made an admin` });
+      } else {
+        res.status(400).json({ error: "Enter a valid tutor email please" });
+      }
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  };

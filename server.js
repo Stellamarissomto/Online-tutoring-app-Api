@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require('dotenv');
 const morgan = require('morgan');
+const cookie = require('cookie-parser');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
@@ -11,6 +12,7 @@ connectDB();
 const generalroute = require('./Routes/general');
 const adminroute = require('./Routes/adminroute');
 const studentroute = require('./Routes/student');
+const tutorroute = require('./Routes/tutor');
 
 
 //load env files
@@ -20,6 +22,9 @@ const app = express();
 
 // Body parser
 app.use(express.json());
+
+// cookie parser
+app.use(cookie());
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -33,6 +38,7 @@ if (process.env.NODE_ENV === 'deveploment') {
  app.use('/api/v1/general', generalroute);
  app.use('/api/v1/admin', adminroute);
  app.use('/api/v1/student', studentroute);
+ app.use('/api/v1/tutor', tutorroute);
 
 
 
